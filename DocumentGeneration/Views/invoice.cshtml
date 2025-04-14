@@ -1,0 +1,97 @@
+﻿@using System.Globalization
+@model DocumentGeneration.Models.InvoiceData
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="">
+    <div class="w-full bg-white p-8">
+        <h1 class="text-center text-2xl font-bold mb-8">EasyPOS</h1>
+        <div class="flex justify-between border-b pb-4 mb-4">
+            <div>
+                <h1 class="text-xl font-bold">INVOICE</h1>
+                <p class="text-gray-600">@Model.CompanyName</p>
+                <p class="text-gray-600">@Model.CompanyAddress, @Model.CompanyCity</p>
+                <p class="text-gray-600">@Model.CompanyState, @Model.CompanyPostal, @Model.CompanyCountry</p>
+            </div>
+            <div class="">
+                <p class="font-bold">INVOICE TO:</p>
+                <p class="text-gray-600">@Model.ClientName</p>
+                <p class="text-gray-600">@Model.ClientAddress, @Model.ClientCity</p>
+                <p class="text-gray-600">@Model.ClientState, @Model.ClientPostal, @Model.ClientCountry</p>
+            </div>
+            <div class="">
+                <p class="text-gray-600">Invoice Number: <strong>@Model.InvoiceNumber</strong></p>
+                <p class="text-gray-600">Date of Issue: <strong>@Model.InvoiceDate</strong></p>
+                <p class="text-gray-600">Due Date: <strong>@Model.DueDate</strong></p>
+            </div>
+        </div>
+
+
+
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse border text-left">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="border p-2">Description</th>
+                        <th class="border p-2 text-center">Qty</th>
+                        <th class="border p-2 text-right">Unit Price</th>
+                        <th class="border p-2 text-right">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.LineItems)
+                    {
+                        var price = decimal.Parse(item.Price, CultureInfo.InvariantCulture);
+                        var total = price * item.Quantity;
+                        var background = item.Index % 2 == 0 ? "bg-gray-200" : "bg-gray-100";
+
+                        <tr class="@background">
+                            <td class="p-2">@item.Name</td>
+                            <td class="p-2 text-center">@item.Quantity</td>
+                            <td class="p-2 text-right">$@price.ToString("F2")</td>
+                            <td class="p-2 text-right">$@total.ToString("F2")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="flex justify-end mt-6">
+            <table class="border text-left w-1/2">
+                <tbody>
+                    <tr>
+                        <td class="border p-2 font-bold text-right">Subtotal</td>
+                        <td class="border p-2 text-right">$@Model.Subtotal</td>
+                    </tr>
+                    <tr>
+                        <td class="border p-2 font-bold text-right">Discount</td>
+                        <td class="border p-2 text-right">$@Model.Discount</td>
+                    </tr>
+                    <tr>
+                        <td class="border p-2 font-bold text-right">Subtotal Less Discount</td>
+                        <td class="border p-2 text-right">$@Model.SubtotalLessDiscount</td>
+                    </tr>
+                    <tr>
+                        <td class="border p-2 font-bold text-right">Tax (@Model.TaxRate%)</td>
+                        <td class="border p-2 text-right">$@Model.TaxTotal</td>
+                    </tr>
+                    <tr class="bg-gray-200 font-bold">
+                        <td class="border p-2 text-right">Balance Due</td>
+                        <td class="border p-2 text-right">$@Model.BalanceDue</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p class="mt-6 text-sm text-gray-600">@Model.Notes</p>
+        <p class="text-sm text-gray-600">@Model.Terms</p>
+    </div>
+</body>
+</html>

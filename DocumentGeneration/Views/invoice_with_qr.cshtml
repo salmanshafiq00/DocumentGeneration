@@ -1,0 +1,177 @@
+﻿@using System.Globalization
+@model DocumentGeneration.Models.InvoiceData
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @@page {
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+
+        .page-break-inside-avoid {
+            page-break-inside: avoid;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .logo-img {
+            max-height: 60px;
+            margin: 0 auto;
+        }
+
+        .max-w-1/3 {
+            max-width: 33.333%;
+            word-wrap: break-word;
+        }
+
+        .qrcode-container {
+            border: 1px solid #ddd;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+
+        .barcode-container {
+            border: 1px solid #ddd;
+            width: 220px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /* Ensure images fit inside their containers */
+        .qrcode-img, .barcode-img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="w-full bg-white p-8">
+        <!-- Logo comes from header template in PuppeteerPdfGenerate.cs, not here -->
+
+        <h1 class="text-center text-2xl font-bold mb-4">EasyPOS</h1>
+
+        <div class="flex justify-between pb-4 mb-4">
+            <div class="flex-1 max-w-1/3 pr-2">
+                <h1 class="text-xl font-bold">INVOICE</h1>
+                <p class="text-gray-600">@Model.CompanyName</p>
+                <p class="text-gray-600">@Model.CompanyAddress, @Model.CompanyCity</p>
+                <p class="text-gray-600">@Model.CompanyState, @Model.CompanyPostal, @Model.CompanyCountry</p>
+            </div>
+            <div class="flex-1 max-w-1/3 px-2">
+                <p class="font-bold">INVOICE TO:</p>
+                <p class="text-gray-600">@Model.ClientName</p>
+                <p class="text-gray-600">@Model.ClientAddress, @Model.ClientCity</p>
+                <p class="text-gray-600">@Model.ClientState, @Model.ClientPostal, @Model.ClientCountry</p>
+            </div>
+            <div class="flex-1 max-w-1/3 pl-2">
+                <p class="text-gray-600">Invoice Number: <strong>@Model.InvoiceNumber</strong></p>
+                <p class="text-gray-600">Date of Issue: <strong>@Model.InvoiceDate</strong></p>
+                <p class="text-gray-600">Due Date: <strong>@Model.DueDate</strong></p>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto mb-6">
+            <table class="w-full border-collapse border text-left">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="border p-2">Description</th>
+                        <th class="border p-2 text-center">Qty</th>
+                        <th class="border p-2 text-right">Unit Price</th>
+                        <th class="border p-2 text-right">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.LineItems)
+                    {
+                        var price = decimal.Parse(item.Price, CultureInfo.InvariantCulture);
+                        var total = price * item.Quantity;
+                        var background = item.Index % 2 == 0 ? "bg-gray-200" : "bg-gray-100";
+
+                        <tr class="@background">
+                            <td class="p-2">@item.Name</td>
+                            <td class="p-2 text-center">@item.Quantity</td>
+                            <td class="p-2 text-right">$@price.ToString("F2")</td>
+                            <td class="p-2 text-right">$@total.ToString("F2")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="flex justify-between">
+            <!-- QR Code and Barcode section -->
+            <div class="flex flex-col w-1/2 pr-2">
+                <!-- QR and Barcode side by side -->
+                <div class="flex justify-start space-x-4 mb-2">
+                    <div class="qrcode-container">
+                        @if (!string.IsNullOrEmpty(Model.QRCodeDataUrl))
+                        {
+                            <img src="@Model.QRCodeDataUrl" alt="QR Code" class="qrcode-img">
+                        }
+                    </div>
+                    <div class="barcode-container">
+                        @if (!string.IsNullOrEmpty(Model.BarcodeDataUrl))
+                        {
+                            <img src="@Model.BarcodeDataUrl" alt="Barcode" class="barcode-img">
+                        }
+                    </div>
+                </div>
+
+                <!-- Footer content below -->
+                <div class="footer-content">
+                    <p class="text-sm text-gray-600">@Model.Notes</p>
+                    <p class="text-sm text-gray-600">@Model.Terms</p>
+                </div>
+            </div>
+
+
+            <!-- Totals section -->
+            <div class="w-1/2 pl-2">
+                <table class="border text-left w-full">
+                    <tbody>
+                        <tr>
+                            <td class="border p-2 font-bold text-right">Subtotal</td>
+                            <td class="border p-2 text-right">$@Model.Subtotal</td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2 font-bold text-right">Discount</td>
+                            <td class="border p-2 text-right">$@Model.Discount</td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2 font-bold text-right">Subtotal Less Discount</td>
+                            <td class="border p-2 text-right">$@Model.SubtotalLessDiscount</td>
+                        </tr>
+                        <tr>
+                            <td class="border p-2 font-bold text-right">Tax (@Model.TaxRate%)</td>
+                            <td class="border p-2 text-right">$@Model.TaxTotal</td>
+                        </tr>
+                        <tr class="bg-gray-200 font-bold">
+                            <td class="border p-2 text-right">Balance Due</td>
+                            <td class="border p-2 text-right">$@Model.BalanceDue</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

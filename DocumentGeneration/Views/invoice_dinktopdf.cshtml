@@ -1,0 +1,248 @@
+﻿@model DocumentGeneration.Models.InvoiceData
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .invoice {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            text-align: center;
+            color: #333;
+            margin: 0 0 20px 0;
+        }
+
+        .invoice-info {
+            width: 100%;
+            overflow: hidden; /* Clears floats */
+        }
+
+            .invoice-info > div {
+                width: 32%;
+                float: left;
+                margin-right: 2%;
+            }
+
+                .invoice-info > div:last-child {
+                    margin-right: 0;
+                }
+
+            .invoice-info p {
+                margin-top: 0rem;
+                margin-bottom: 0rem;
+            }
+
+        h2, h3 {
+            color: #666;
+            margin: 0 0 0 0;
+        }
+
+
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .summary {
+            margin-left: auto;
+            width: 300px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+            .summary-row.total {
+                font-weight: bold;
+                font-size: 1.2em;
+                border-top: 2px solid #333;
+                border-bottom: none;
+                padding-top: 15px;
+            }
+
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        @@media print {
+            body {
+                background: none;
+                padding: 0;
+            }
+
+            .invoice {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice">
+        <div class="header">
+            <h1>EasyPOS</h1>
+            <div class="invoice-info">
+                <div class="left">
+                    <h2>INVOICE</h2>
+                    <p>Parker, Boyle and Schmidt</p>
+                    <p>5211 Lysanne Inlet, Stewartberg</p>
+                    <p>NM, 22758, Malta</p>
+                </div>
+                <div class="invoice-to">
+                    <h3>INVOICE TO:</h3>
+                    <p>Stroman, Heidenreich and Rolfson</p>
+                    <p>1414 Bosco Trafficway, Port Candido</p>
+                    <p>MO, 10429, Isle of Man</p>
+                </div>
+                <div class="dates">
+                    <p><strong>Invoice Number:</strong> 2229</p>
+                    <p><strong>Date of Issue:</strong> 2025-03-12</p>
+                    <p><strong>Due Date:</strong> 2025-03-12</p>
+                </div>
+
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Qty</th>
+                    <th>Unit Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Intelligent Soft Hat</td>
+                    <td>5</td>
+                    <td>$557.29</td>
+                    <td>$2786.45</td>
+                </tr>
+                <tr>
+                    <td>Refined Cotton Table</td>
+                    <td>1</td>
+                    <td>$40.36</td>
+                    <td>$40.36</td>
+                </tr>
+                <tr>
+                    <td>Sleek Fresh Pants</td>
+                    <td>3</td>
+                    <td>$478.15</td>
+                    <td>$1434.45</td>
+                </tr>
+                <tr>
+                    <td>Rustic Wooden Shoes</td>
+                    <td>1</td>
+                    <td>$247.07</td>
+                    <td>$247.07</td>
+                </tr>
+                <tr>
+                    <td>Ergonomic Steel Sausages</td>
+                    <td>5</td>
+                    <td>$267.52</td>
+                    <td>$1337.60</td>
+                </tr>
+                <tr>
+                    <td>Handcrafted Metal Sausages</td>
+                    <td>2</td>
+                    <td>$110.00</td>
+                    <td>$220.00</td>
+                </tr>
+                <tr>
+                    <td>Sleek Fresh Towels</td>
+                    <td>4</td>
+                    <td>$658.01</td>
+                    <td>$2632.04</td>
+                </tr>
+                <tr>
+                    <td>Licensed Wooden Chair</td>
+                    <td>2</td>
+                    <td>$564.15</td>
+                    <td>$1128.30</td>
+                </tr>
+                <tr>
+                    <td>Refined Frozen Salad</td>
+                    <td>2</td>
+                    <td>$781.15</td>
+                    <td>$1562.30</td>
+                </tr>
+                <tr>
+                    <td>Handmade Rubber Gloves</td>
+                    <td>5</td>
+                    <td>$43.09</td>
+                    <td>$215.45</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="summary">
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span>$11604.02</span>
+            </div>
+            <div class="summary-row">
+                <span>Discount</span>
+                <span>$580.2010</span>
+            </div>
+            <div class="summary-row">
+                <span>Subtotal Less Discount</span>
+                <span>$11023.8190</span>
+            </div>
+            <div class="summary-row">
+                <span>Tax (0.1%)</span>
+                <span>$1102.38190</span>
+            </div>
+            <div class="summary-row total">
+                <span>Balance Due</span>
+                <span>$12126.20090</span>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Thank you for your business!</p>
+            <p>Payment is due within 30 days. Late payments may be subject to additional fees.</p>
+        </div>
+    </div>
+</body>
+</html>
