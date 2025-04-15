@@ -1,4 +1,4 @@
-test# PDF Report Generation in .NET - A Comprehensive Guide
+# PDF Report Generation in .NET - A Comprehensive Guide
 
 This repository demonstrates three different approaches for generating PDF reports in .NET applications: QuestPDF, PuppeteerSharp, and Playwright. Each method offers its own advantages and trade-offs for creating professional invoices with headers, footers, tables, images, QR codes, and barcodes.
 
