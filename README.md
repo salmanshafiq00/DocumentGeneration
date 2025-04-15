@@ -613,19 +613,24 @@ The QR code and barcode generation helpers are the same as in the PuppeteerSharp
 - **ZXing.Net**: Used for generating barcode and QR code data
 - **SkiaSharp**: Used for image processing to create barcode/QR code images
 
-## Comparison
+## Feature Comparison Matrix
 
-| Feature | QuestPDF | PuppeteerSharp | Playwright |
-|---------|----------|----------------|------------|
-| **Type** | Native PDF | HTML-to-PDF | HTML-to-PDF |
-| **Dependencies** | Minimal | Browser + Libraries | Browser + Libraries |
-| **Performance** | Fast | Slower | Moderate |
-| **Complexity** | Medium | Low (if familiar with HTML) | Low (if familiar with HTML) |
-| **Styling** | Limited | Full CSS | Full CSS |
-| **Resource Usage** | Low | High | High |
-| **Container Support** | Excellent | Requires Setup | Requires Setup |
-| **Learning Curve** | Steeper for complex layouts | Lower with HTML knowledge | Lower with HTML knowledge |
-| **Maintenance** | Active Community | Active Community | Active Community |
+| Feature | Playwright | PuppeteerSharp | QuestPDF | DinkToPdf | PDFSharp |
+|:-------:|:----------:|:--------------:|:--------:|:---------:|:--------:|
+| **Rendering Engine** | Chromium | Chromium | SkiaSharp | WebKit | Custom |
+| **HTML to PDF** | ✅ Excellent | ✅ Good | ❌ No | ✅ Good | ⚠️ Limited |
+| **CSS Support** | ✅ Full | ✅ Full | ❌ N/A | ⚠️ Partial | ⚠️ Partial |
+| **Performance** | ⚠️ Medium | ⚠️ Medium | ✅ Fast | ✅ Fast | ✅ Fast |
+| **Memory Usage** | ⚠️ High | ⚠️ High | ✅ Low | ⚠️ Medium | ✅ Low |
+| **Containerization** | ⚠️ Complex | ⚠️ Complex | ✅ Simple | ⚠️ Medium | ✅ Simple |
+| **Headers/Footers** | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes |
+| **Cross-Platform** | ✅ Yes | ✅ Yes | ✅ Yes | ⚠️ Partial | ✅ Yes |
+| **Barcodes/QR** | ⚠️ Via JS | ⚠️ Via JS | ✅ Native | ❌ No | ✅ With Add-ons |
+| **Digital Signatures** | ❌ No | ❌ No | ⚠️ Limited | ❌ No | ✅ Yes |
+| **Table Support** | ✅ Via HTML | ✅ Via HTML | ✅ Native | ✅ Via HTML | ✅ Native |
+| **Image Support** | ✅ Excellent | ✅ Good | ✅ Good | ✅ Good | ✅ Good |
+| **PDF/A Support** | ❌ No | ❌ No | ⚠️ Limited | ❌ No | ✅ Yes |
+| **PDF Compression** | ⚠️ Basic | ⚠️ Basic | ✅ Advanced | ⚠️ Basic | ✅ Advanced |
 
 ## Choose the Right Approach
 
