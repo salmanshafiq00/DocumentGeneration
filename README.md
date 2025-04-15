@@ -478,12 +478,32 @@ dotnet add package ZXing.Net --version 0.16.9
 dotnet add package SkiaSharp --version 2.88.3
 ```
 
-### Step 2: Basic Configuration
+### Step 2: Browser Setup Options
+
+#### Option 1: Install via CLI (Recommended for development)
+
+```bash
+# Install Playwright CLI
+dotnet tool install --global Microsoft.Playwright.CLI
+
+# Install browser binaries
+playwright install chromium
+```
+
+#### Option 2: Install via PowerShell Script (Good for CI/CD)
+
+```powershell
+pwsh bin/Debug/net8.0/playwright.ps1 install
+```
+
+#### Option 3: Programmatic Installation (Useful for containerized environments)
 
 ```csharp
-// Install browser binaries using CLI before running the application
-// dotnet tool install --global Microsoft.Playwright.CLI
-// playwright install chromium
+// Add this to your application startup
+using Microsoft.Playwright;
+
+// Install browsers programmatically
+await Microsoft.Playwright.Program.Main(new[] { "install", "chromium" });
 ```
 
 ### Step 3: Generate PDF with Header, Content, and Footer
