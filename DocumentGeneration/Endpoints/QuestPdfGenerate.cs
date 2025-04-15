@@ -174,7 +174,7 @@ public static class QuestPdfGenerate
         .WithName("questPdf-get-invoice-pdf")
         .WithOpenApi();
 
-        group.MapGet("get-invoice-pdf2", (int? lineItemCount = 10) =>
+        group.MapGet("get-invoice-pdf-qrcode", (int? lineItemCount = 10) =>
         {
             // Generate invoice data
             var invoiceData = FakeData.GenerateInvoiceData(lineItemCount ?? 10);

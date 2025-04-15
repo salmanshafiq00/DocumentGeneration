@@ -74,16 +74,16 @@ public static class DinkToPdfGenerate
 
         var headerSettings = new HeaderSettings
         {
-            Center = $"Invoice #{invoiceNumber}",  // ✅ Shows invoice number in header
+            Center = $"Invoice #{invoiceNumber}",  //  Shows invoice number in header
             FontSize = 10,
-            Line = false,  // ✅ Adds a separator line below the header
+            Line = false,  // Adds a separator line below the header
             Spacing = 5
         };
 
         var footerSettings = new FooterSettings
         {
-            Left = $"Printed on {printedOn}",  // ✅ Shows date-time on the left
-            Right = "Page [page] of [toPage]", // ✅ Shows page numbers on the right
+            Left = $"Printed on {printedOn}",  //  Shows date-time on the left
+            Right = "Page [page] of [toPage]", //  Shows page numbers on the right
             FontSize = 9,
             Line = false,  
             Spacing = 5
@@ -94,21 +94,21 @@ public static class DinkToPdfGenerate
             ColorMode = ColorMode.Color,
             Orientation = Orientation.Portrait,
             PaperSize = PaperKind.A4,
-            Margins = new MarginSettings { Top = 10, Bottom = 25, Left = 4, Right = 4 }, // ✅ Increased bottom margin
+            Margins = new MarginSettings { Top = 10, Bottom = 25, Left = 4, Right = 4 }, // Increased bottom margin
             DocumentTitle = $"Invoice #{invoiceNumber}",
-            DPI = 300, // ✅ High DPI for better quality
+            DPI = 300, //  High DPI for better quality
             UseCompression = true
         };
 
         var objectSettings = new ObjectSettings
         {
-            PagesCount = true,  // ✅ Ensures [page] and [toPage] work
+            PagesCount = true,  // Ensures [page] and [toPage] work
             HtmlContent = htmlContent,
             WebSettings = {
                 DefaultEncoding = "utf-8",
                 PrintMediaType = true,
-                EnableJavascript = true,  // ✅ Ensures JavaScript execution
-                LoadImages = true         // ✅ Ensures images are loaded
+                EnableJavascript = true,  // Ensures JavaScript execution
+                LoadImages = true         // Ensures images are loaded
             },
             HeaderSettings = headerSettings,
             FooterSettings = footerSettings
