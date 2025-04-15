@@ -1,9 +1,5 @@
 ﻿using PuppeteerSharp;
 using PuppeteerSharp.Media;
-using SkiaSharp;
-using ZXing;
-using ZXing.QrCode;
-using ZXing.QrCode.Internal;
 
 namespace DocumentGeneration.Endpoints;
 
@@ -12,6 +8,18 @@ public static class PuppeteerPdfGenerate
     public static IEndpointRouteBuilder MapPuppeteerPdfGenerate(this IEndpointRouteBuilder routes)
     {
         var group = routes.MapGroup("puppeteerPdf");
+
+        group.MapGet("get-invoice-preview", async (int? lineItemCount = 10) =>
+        {
+            var invoiceData = FakeData.GenerateInvoiceData(lineItemCount ?? 10);
+
+            // Create HTML content from template
+            string htmlContent = await UtilitiesExtension.GenerateHtmlContent<InvoiceData>(invoiceData, "invoice_with_qr");
+
+            return Results.Content(htmlContent, "text/html");
+        })
+        .WithName("puppeteer-get-invoice-preview")
+        .WithOpenApi();
 
         group.MapGet("get-invoice-pdf", async (IWebHostEnvironment webHostEnvironment, int? lineItemCount = 10) =>
         {
@@ -28,18 +36,6 @@ public static class PuppeteerPdfGenerate
             return Results.File(pdfBytes, "application/pdf", $"invoice-{invoiceData.InvoiceNumber}.pdf");
         })
         .WithName("puppeteerPdf-get-invoice-pdf")
-        .WithOpenApi();
-
-        group.MapGet("get-invoice-preview", async (int? lineItemCount = 10) =>
-        {
-            var invoiceData = FakeData.GenerateInvoiceData(lineItemCount ?? 10);
-
-            // Create HTML content from template
-            string htmlContent = await UtilitiesExtension.GenerateHtmlContent<InvoiceData>(invoiceData, "invoice_with_qr");
-
-            return Results.Content(htmlContent, "text/html");
-        })
-        .WithName("puppeteer-get-invoice-preview")
         .WithOpenApi();
 
         /// <summary>
@@ -62,8 +58,8 @@ public static class PuppeteerPdfGenerate
             var invoiceData = FakeData.GenerateInvoiceData(lineItemCount ?? 10);
 
             // Generate QR code and barcode
-            string qrCodeDataUrl = GenerateQRCodeDataUrl(invoiceData.InvoiceNumber);
-            string barcodeDataUrl = GenerateBarcodeDataUrl(invoiceData.InvoiceNumber);
+            string qrCodeDataUrl = UtilitiesExtension.GenerateQRCodeDataUrl(invoiceData.InvoiceNumber);
+            string barcodeDataUrl = UtilitiesExtension.GenerateBarcodeDataUrl(invoiceData.InvoiceNumber);
 
             // Add barcode and QR code to the invoice data
             invoiceData.QRCodeDataUrl = qrCodeDataUrl;
@@ -148,80 +144,7 @@ public static class PuppeteerPdfGenerate
         });
     }
 
-    private static string GenerateQRCodeDataUrl(string content)
-    {
-        var writer = new BarcodeWriterPixelData
-        {
-            Format = BarcodeFormat.QR_CODE,
-            Options = new QrCodeEncodingOptions
-            {
-                ErrorCorrection = ErrorCorrectionLevel.H,
-                Height = 200,
-                Width = 200,
-                Margin = 1
-            }
-        };
+    
 
-        var pixelData = writer.Write(content);
-        using var bitmap = new SKBitmap(pixelData.Width, pixelData.Height);
-
-        // Copy pixel data to bitmap
-        var info = new SKImageInfo(pixelData.Width, pixelData.Height);
-        using var surface = SKSurface.Create(info);
-
-        unsafe
-        {
-            fixed (byte* p = pixelData.Pixels)
-            {
-                using var skData = SKData.Create((IntPtr)p, pixelData.Pixels.Length);
-                var skImage = SKImage.FromPixels(info, skData, pixelData.Width * 4);
-                surface.Canvas.DrawImage(skImage, 0, 0);
-            }
-        }
-
-        using var image = surface.Snapshot();
-        using var data = image.Encode(SKEncodedImageFormat.Png, 100);
-
-        // Convert to base64
-        var base64String = Convert.ToBase64String(data.ToArray());
-        return $"data:image/png;base64,{base64String}";
-    }
-
-    private static string GenerateBarcodeDataUrl(string content)
-    {
-        var writer = new BarcodeWriterPixelData
-        {
-            Format = BarcodeFormat.CODE_128,
-            Options = new ZXing.Common.EncodingOptions
-            {
-                Height = 80,
-                Width = 220,
-                Margin = 1
-            }
-        };
-
-        var pixelData = writer.Write(content);
-        using var bitmap = new SKBitmap(pixelData.Width, pixelData.Height);
-
-        // Copy pixel data to bitmap
-        var info = new SKImageInfo(pixelData.Width, pixelData.Height);
-        using var surface = SKSurface.Create(info);
-
-        unsafe
-        {
-            fixed (byte* p = pixelData.Pixels)
-            {
-                using var skData = SKData.Create((IntPtr)p, pixelData.Pixels.Length);
-                var skImage = SKImage.FromPixels(info, skData, pixelData.Width * 4);
-                surface.Canvas.DrawImage(skImage, 0, 0);
-            }
-        }
-
-        using var image = surface.Snapshot();
-        using var data = image.Encode(SKEncodedImageFormat.Png, 100);
-
-        // Convert to base64
-        var base64String = Convert.ToBase64String(data.ToArray());
-        return $"data:image/png;base64,{base64String}";
-    }
+    
 }
